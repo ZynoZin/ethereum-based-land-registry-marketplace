@@ -4,10 +4,11 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import './Home.css'
 import HomeCard from '../../assets/homeCard.svg'
-
+import { EthereumContext } from "../../context/EthereumContext";
 const Home = () => {
 	
-
+	const { checkIfWalletIsConnected, setConnectedAccount } = useContext(EthereumContext);
+	
 	return (
 		<>
 			<Container className='mt-5'>

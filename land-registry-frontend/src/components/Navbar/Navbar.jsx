@@ -26,7 +26,7 @@ const NavbarComponent = () => {
 				<Nav>
 					<Nav.Link className='title mx-5 mt-3'>Explore</Nav.Link>
 					<Nav.Link className='title mx-5 mt-3'>
-					Add your land
+					Register
 					</Nav.Link>
 					{ connectedAccount == null ? (
 						<button onClick={connectWallet} className='meta-button mx-5 p-0'>

@@ -74,11 +74,10 @@ export const EthereumProvider = ({ children }) => {
 	const checkIfWalletIsConnected = async()=> {
 		try {
 			if (!ethereum) return alert('Please install metamask!');
-
-			const accounts = await ethereum.request({ method: 'eth_accounts' });
-			if (accounts.length) {
-				setConnectedAccount(accounts[0]);
-				getAllUsers();
+			const currentAccount = JSON.parse(localStorage.getItem('connectedAccount'));
+			console.log(currentAccount)
+			if (connectedAccount == null && currentAccount != null) {
+				setConnectedAccount(currentAccount);
 			} else {
 				console.log('No accounts found');
 			}
@@ -89,9 +88,6 @@ export const EthereumProvider = ({ children }) => {
 		}
 	}
 
-	useEffect(() => {
-		checkIfWalletIsConnected();
-	}, []);
 
 	const connectWallet = async() => {
 		try {
@@ -104,9 +100,16 @@ export const EthereumProvider = ({ children }) => {
 			throw new Error('No Ethereum wallet found!');
 		}
 	}
+	useEffect(() => {
+		checkIfWalletIsConnected();
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('connectedAccount', JSON.stringify(connectedAccount));
+	}, [connectedAccount]);
 
 	return (
-		<EthereumContext.Provider value={{ connectWallet, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
+		<EthereumContext.Provider value={{ connectWallet, checkIfWalletIsConnected, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
 			{children}
 		</EthereumContext.Provider>
 	)

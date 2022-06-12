@@ -32,7 +32,7 @@ const Regisration = ({accountType}) => {
 		<>
 			<Container className='mt-5'>
 				<Row>
-					<h2 className='display-3 title text-center'>{accountType === 'inspector' ? 'Land Inspector Regisration' : 'Land Owner Registration'}</h2>	
+					<h2 className='display-3 title text-center'>{accountType !== 'inspector' ? 'Land Inspector Regisration' : 'Land Owner Registration'}</h2>	
 				</Row>
 				<Row>
 					<form className="reg-form" onSubmit={handleSubmit}>
@@ -42,8 +42,8 @@ const Regisration = ({accountType}) => {
 						<input name="age" type="number" className="form-control" placeholder="Your age" onChange={handleChange} />
 						<label className="form-label mt-2">Address</label>
 						<input name="address" type="text" className="form-control" placeholder="Your address" onChange={handleChange} />
-						<label className="form-label mt-2">Code for verification</label>
-						<input name="verificationCode" type="text" className="form-control" placeholder="Verification Code" onChange={handleChange} />
+						{accountType !== 'inspector' && <label className="form-label mt-2">Verification Code</label>}
+						{accountType !== 'inspector' && <input name="verificationCode" type="text" className="form-control" placeholder="Verification Code" onChange={handleChange} />}
 						<button type="submit" className="sub-button  mt-5" onClick={handleSubmit}>Submit</button>
 					</form>
 				</Row>
