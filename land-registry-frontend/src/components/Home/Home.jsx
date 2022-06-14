@@ -7,7 +7,6 @@ import HomeCard from '../../assets/homeCard.svg'
 import { EthereumContext } from "../../context/EthereumContext";
 const Home = () => {
 	
-	const { checkIfWalletIsConnected, setConnectedAccount } = useContext(EthereumContext);
 	
 	return (
 		<>

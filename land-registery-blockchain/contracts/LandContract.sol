@@ -5,9 +5,10 @@ pragma experimental ABIEncoderV2;
 contract LandContract {
 	uint public landCount = 0;
 	struct LandStruct {
+		uint landNumber;
  		uint area;
- 		string location;
  		string addr;
+		string description;
  		address owner;
  		bool verificationStatus;
  		uint price;
@@ -22,9 +23,9 @@ contract LandContract {
 		return lands;
 	}
 
-	function createLand(uint area, string memory location, string memory addr, uint price) public {
+	function createLand(uint area, string memory description, string memory addr, uint price) public {
 		landCount++;
-		lands.push(LandStruct(area, location, addr, msg.sender, false, price));
+		lands.push(LandStruct(landCount, area, description, addr, msg.sender, false, price));
 	}
 
 	function verifyLand(uint _id) public {
@@ -35,9 +36,9 @@ contract LandContract {
 		return lands[_id];
 	}
 
-	function modifyLand(uint _id, uint area, string memory location, string memory addr, uint price) public {
+	function modifyLand(uint _id, uint area, string memory description, string memory addr, uint price) public {
 		lands[_id].area = area;
-		lands[_id].location = location;
+		lands[_id].description = description;
 		lands[_id].addr = addr;
 		lands[_id].price = price;
 	}

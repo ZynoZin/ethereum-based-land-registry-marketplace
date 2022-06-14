@@ -22,7 +22,7 @@ const Regisration = ({accountType}) => {
 			return;
 		}
 		if (!name || !age || !address || !verificationCode) return;
-		registerUser(name, verificationCode, age, address);
+		registerUser(name, age, address);
 		
 		if (accountType === 'inspector') {
 			setLandInspector();

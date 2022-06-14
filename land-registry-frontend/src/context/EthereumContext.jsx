@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from 'ethers';
 import { landContractABI, landContractAddress, userContractABI, userContractAddress } from "../utils/constants";
-
+import { useNavigate } from 'react-router-dom';
 export const EthereumContext = React.createContext();
 
 const { ethereum } = window;
@@ -15,19 +15,22 @@ const getEthereumContract = (contractAddress, contractABI) => {
 
 
 export const EthereumProvider = ({ children }) => {
-
+	const navigate = useNavigate();
 	const [connectedAccount, setConnectedAccount] = useState(null);
+	const [userData, setUserData] = useState(null);
+	const [usersData, setUsersData] = useState([]);
+	const [landsData, setLandsData] = useState([]);
 	const getAllLands = async() => {
 		try {
 			if (!ethereum) return alert('Please install metamask!');
 
 			const landContract = getEthereumContract(landContractAddress, landContractABI);
 			const availableLands = await landContract.getAllLands();
-
-			console.log(availableLands);
-
+			setLandsData(availableLands);
+			return availableLands;
 		} catch (error) {
-			
+			console.log(error);
+			throw new Error('Couldn\'t get the list of lands.');
 		}
 	}
 
@@ -38,7 +41,7 @@ export const EthereumProvider = ({ children }) => {
 
 			const userContract = getEthereumContract(userContractAddress, userContractABI);
 			const existentUsers = await userContract.getAllUsers();
-			console.log(existentUsers);
+			setUsersData(existentUsers);
 			return existentUsers;
 		} catch (error) {
 			console.log(error);
@@ -46,14 +49,24 @@ export const EthereumProvider = ({ children }) => {
 		}
 	
 	}
+	const addLand = async(area, description, address, price) => {
+		try {
+			if (!ethereum) return alert('Please install metamask!');
 
-	const registerUser = async(name, verificationCode, age, address) => {
+			const landContract = getEthereumContract(landContractAddress, landContractABI);
+			await landContract.createLand(area, description, address, price);
+		} catch (error) {
+			console.log(error);
+			throw new Error('Couldn\'t add the land.');
+		}
+	}
+
+	const registerUser = async(name, age, address) => {
 		try {
 			if (!ethereum) return alert('Please install metamask!');
 
 			const userContract = getEthereumContract(userContractAddress, userContractABI);
-			const user = await userContract.createUser(name, verificationCode, age, address);
-			console.log(user);
+			await userContract.createUser(name, age, address);
 		} catch (error) {
 			console.log(error);
 			throw new Error('Couldn\'t register user');
@@ -71,15 +84,32 @@ export const EthereumProvider = ({ children }) => {
 			throw new Error('Couldn\'t find user');
 		}
 	}
+
+	const getCurrentUserData = async () =>{
+		try {
+			const users = await getAllUsers();
+			const currentAccount = JSON.parse(localStorage.getItem('connectedAccount'));
+			const id = users.findIndex(user => user.userAddress.toLowerCase() === currentAccount.toLowerCase());
+			setUserData(users[id]);
+		} catch (error) {
+			console.log(error);
+			throw new Error('Couldn\'t find user');
+		}
+	
+	}
+
 	const checkIfWalletIsConnected = async()=> {
 		try {
 			if (!ethereum) return alert('Please install metamask!');
 			const currentAccount = JSON.parse(localStorage.getItem('connectedAccount'));
-			console.log(currentAccount)
-			if (connectedAccount == null && currentAccount != null) {
+			if (currentAccount != null) {
 				setConnectedAccount(currentAccount);
+				await getAllUsers();
+				await getCurrentUserData();
+				await getAllLands();
+				navigate('/profile');
 			} else {
-				console.log('No accounts found');
+				console.log('no account found!')
 			}
 			
 		} catch (error) {
@@ -95,6 +125,7 @@ export const EthereumProvider = ({ children }) => {
 
 			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 			setConnectedAccount(accounts[0]);
+			navigate('/profile');
 		} catch(error){
 			console.log(error);
 			throw new Error('No Ethereum wallet found!');
@@ -109,7 +140,7 @@ export const EthereumProvider = ({ children }) => {
 	}, [connectedAccount]);
 
 	return (
-		<EthereumContext.Provider value={{ connectWallet, checkIfWalletIsConnected, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
+		<EthereumContext.Provider value={{ connectWallet, getAllLands, landsData, addLand, userData, usersData, checkIfWalletIsConnected, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
 			{children}
 		</EthereumContext.Provider>
 	)

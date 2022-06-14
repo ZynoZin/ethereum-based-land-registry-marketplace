@@ -1,5 +1,5 @@
 .reg-form{
-	background: linear-gradient(118.73deg, #B829EA 0%, rgba(92, 19, 165, 0) 99.36%);
+	background: linear-gradient(118.73deg, #B829EA 60%, rgba(92, 19, 165, 0) 99.36%);
 	filter: drop-shadow(6px 7px 4px rgba(0, 0, 0, 0.25));
 	border-radius: 19px;
 	padding: 3em;
@@ -19,3 +19,4 @@
 	background-color: #543DDC;
 	text-align: center;
 }
+
