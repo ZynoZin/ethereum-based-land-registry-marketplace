@@ -107,7 +107,7 @@ export const EthereumProvider = ({ children }) => {
 				await getAllUsers();
 				await getCurrentUserData();
 				await getAllLands();
-				navigate('/profile');
+				// navigate('/profile');
 			} else {
 				console.log('no account found!')
 			}
@@ -118,6 +118,16 @@ export const EthereumProvider = ({ children }) => {
 		}
 	}
 
+	const verifyLand = async(landId) => {
+		try {
+			const landContract = getEthereumContract(landContractAddress, landContractABI);
+			const test = await landContract.verifyLand(landId);
+			console.log(test);
+		} catch (error) {	
+			console.log(error);
+			throw new Error('Couldn\'t verify land');
+		}
+	}
 
 	const connectWallet = async() => {
 		try {
@@ -125,7 +135,7 @@ export const EthereumProvider = ({ children }) => {
 
 			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 			setConnectedAccount(accounts[0]);
-			navigate('/profile');
+			// navigate('/profile');
 		} catch(error){
 			console.log(error);
 			throw new Error('No Ethereum wallet found!');
@@ -140,7 +150,7 @@ export const EthereumProvider = ({ children }) => {
 	}, [connectedAccount]);
 
 	return (
-		<EthereumContext.Provider value={{ connectWallet, getAllLands, landsData, addLand, userData, usersData, checkIfWalletIsConnected, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
+		<EthereumContext.Provider value={{ connectWallet, getAllLands, verifyLand, landsData, addLand, userData, usersData, checkIfWalletIsConnected, setLandInspector, setConnectedAccount, connectedAccount, registerUser, getAllUsers }}>
 			{children}
 		</EthereumContext.Provider>
 	)

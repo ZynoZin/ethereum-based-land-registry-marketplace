@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Dashboard from '../Dashboard/Dashboard';
 import AddLand from '../AddLand/AddLand';
-import Card from '../Card/Card';
+import Table from '../Table/Table';
 import Lands from '../Lands/Lands';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
@@ -23,6 +23,7 @@ function Profile() {
 	const [isOnExplore, setIsOnExplore] = useState(false);
 	const [isOnDashboard, setIsOnDashboard] = useState(true);
 	const [isOnAddLand, setIsOnAddLand] = useState(false);
+	const [isLandInspector, setIsLandInspector] = useState(false);
 	const navigate = useNavigate();
 
 	const handleIsOnUserLands = () => {
@@ -57,6 +58,7 @@ function Profile() {
 			checkIfWalletIsConnected();
 		}
 		else {
+			setIsLandInspector(userData.isLandInspector)
 			setUserInfo(
 			{
 				name: userData.name,
@@ -77,47 +79,74 @@ function Profile() {
 	return (
 		<>		
 				{
-					connectedAccount ? 	
-					<Container fluid className='mt-5 px-5'>
-						<Row>
-							<h2 className='display-3 title text-center'>Welcome {userInfo.name}</h2>	
-						</Row>
-						<Row>
-							<Col xs={2} className='menu p-0'>
-								<button className="p-3 menu-button" onClick={handleIsOnDashboard}>
-									<img alt="" src={DashboardSVG} width="30" height="30" className="d-inline-block align-top" />
-									Dashboard
-								</button>
-								<button className="p-3 menu-button" onClick={handleIsOnAddLand}>
-									<img alt="" src={AddYourLand} width="30" height="30" className="d-inline-block align-top" />
-									Add Your Land
-								</button>
-								<button className="p-3 menu-button"  onClick={handleIsOnUserLands}>
-									<img alt="" src={YourLand} width="30" height="30" className="d-inline-block align-top" />
-									Your Lands
-								</button>
-								<button className="p-3 menu-button"  onClick={handleIsOnExplore}>
-									<img alt="" src={Explore} width="30" height="30" className="d-inline-block align-top"/>
-									Explore Lands
-								</button>
-								<button className="p-3 menu-button" onClick={handleLogout}>
-									<img alt="" src={Logout} width="30" height="30" className="d-inline-block align-top" />
-									Logout
-								</button>
-							</Col>
-							<Col className='content'>
-								{isOnDashboard && <Dashboard userInfo={userInfo}/>}
-								{isOnAddLand && <AddLand />}
-								{isOnUserLands && <Lands userInfo = {userInfo} usersData = {usersData} isOnUserLands = {isOnUserLands} />}
-								{isOnExplore && <Lands usersData = {usersData}  userInfo = {userInfo} isOnUserLands = {isOnUserLands} />}
-							</Col>
-						</Row>
-					</Container>
-					:
+					!isLandInspector  && connectedAccount &&
+						<Container fluid className='mt-5 px-5'>
+							<Row>
+								<h2 className='display-3 title text-center'>Welcome {userInfo.name}</h2>	
+							</Row>
+							<Row>
+								<Col xs={2} className='menu p-0'>
+									<button className="p-3 menu-button" onClick={handleIsOnDashboard}>
+										<img alt="" src={DashboardSVG} width="30" height="30" className="d-inline-block align-top" />
+										Dashboard
+									</button>
+									<button className="p-3 menu-button" onClick={handleIsOnAddLand}>
+										<img alt="" src={AddYourLand} width="30" height="30" className="d-inline-block align-top" />
+										Add Your Land
+									</button>
+									<button className="p-3 menu-button"  onClick={handleIsOnUserLands}>
+										<img alt="" src={YourLand} width="30" height="30" className="d-inline-block align-top" />
+										Your Lands
+									</button>
+									<button className="p-3 menu-button"  onClick={handleIsOnExplore}>
+										<img alt="" src={Explore} width="30" height="30" className="d-inline-block align-top"/>
+										Explore Lands
+									</button>
+									<button className="p-3 menu-button" onClick={handleLogout}>
+										<img alt="" src={Logout} width="30" height="30" className="d-inline-block align-top" />
+										Logout
+									</button>
+								</Col>
+								<Col className='content'>
+									{isOnDashboard && <Dashboard userInfo={userInfo}/>}
+									{isOnAddLand && <AddLand />}
+									{isOnUserLands && <Lands userInfo = {userInfo} usersData = {usersData} isOnUserLands = {isOnUserLands} />}
+									{isOnExplore && <Lands usersData = {usersData}  userInfo = {userInfo} isOnUserLands = {isOnUserLands} />}
+								</Col>
+							</Row>
+						</Container>
+					
+				}
+				{
+					connectedAccount && isLandInspector &&
+						<Container fluid className='mt-5 px-5'>
+							<Row>
+								<h2 className='display-3 title text-center'>Welcome {userInfo.name}</h2>	
+							</Row>
+							<Row>
+								<Col xs={2} className='menu p-0'>
+									<button className="p-3 menu-button" onClick={handleIsOnDashboard}>
+										<img alt="" src={DashboardSVG} width="30" height="30" className="d-inline-block align-top" />
+										Verify Lands
+									</button>
+									<button className="p-3 menu-button" onClick={handleLogout}>
+										<img alt="" src={Logout} width="30" height="30" className="d-inline-block align-top" />
+										Logout
+									</button>
+								</Col>
+								<Col className='content'>
+									<Table />
+								</Col>
+							</Row>
+						</Container>
+				}
+				{ !connectedAccount && 
 					<Container className='mt-5 d-flex px-5'>
 						<button className='sub-button' onClick={connectWallet}>ConnectWallet</button>
 					</Container>
 				}
+					
+				
 				
 		</>
 

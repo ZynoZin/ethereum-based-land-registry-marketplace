@@ -15,7 +15,8 @@ contract UserContract {
 	}
 	UserStruct[] users;
 	constructor() public {
-		createUser("Zyno", 20, "ENSIAS");
+		createUser("Zin Eddine", 20, "ENSIAS");
+		setLandInspector(0);
 	}
 
  	function createUser(string memory name, uint age, string memory addr) public {
