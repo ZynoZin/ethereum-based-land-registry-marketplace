@@ -11,5 +11,19 @@ module.exports = {
       enabled: true,
       runs: 200
     }
-  }
+  },
+	compilers: {
+    solc: {
+      version: "0.8.0", // Solidity compiler version
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200,
+        },
+        evmVersion: "istanbul",
+        // Add experimental features here
+        evmVersion: "istanbul",
+      },
+    },
+	},
 }
